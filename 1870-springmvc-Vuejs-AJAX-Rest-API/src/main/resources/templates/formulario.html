@@ -1,0 +1,45 @@
+<html>
+	<head th:replace="~{base::head}"></head>
+	<body>
+		<div th:replace="~{base::logo}"></div>
+		<div class="container">
+			<div th:replace="~{base::titulo('Novo pedido')}"></div>
+			
+			<div class="card mt-3">
+				<form th:object="${pedidoRequest}" class="card-body" th:action="@{/pedido/cadastrar}" method="post">
+					<div class="form-group">
+						<label for="nomeProduto">Produto</label>
+						<input th:field="*{nomeProduto}" class="form-control" th:errorclass="is-invalid" placeholder="nome do produto"/>
+						<small>Informa qual o nome do produto</small>
+						<div class="invalid-feedback" th:errors="*{nomeProduto}">
+							<!-- A annotation @NotBlank no PedidoRequest vai preencher autmaticamente com a msg "não pode estar em branco" -->
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="urlProduto">Url do Produto</label>
+						<input th:field="*{urlProduto}" class="form-control" th:errorclass="is-invalid" placeholder="url do produto"/>
+						<small>Procure em um site o produto desejado e cole a url da página aqui</small>
+						<div class="invalid-feedback" th:errors="*{urlProduto}">
+							<!-- Para msg de erros especificas ou outros idiomas usar o messages.properties-->
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="urlImagem">Url da Imagem</label>
+						<input th:field="*{urlImagem}" class="form-control" th:errorclass="is-invalid" placeholder="url da imagem"/>
+						<small>Copie a url de uma boa imagem do produto e cole aqui para ajudar a conseguir compradores</small>
+						<div class="invalid-feedback" th:errors="*{urlImagem}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="descricao">Descricao</label>
+						<textarea th:field="*{descricao}" class="form-control" th:errorclass="is-invalid" placeholder="Adicione detalhes importantes para ajudar o comprador"></textarea>
+						<div class="invalid-feedback" th:errors="*{descricao}">
+							Descricao do produto
+						</div>
+					</div>
+					<button class="btn btn-outline-primary" type="submit">Cadastrar</button>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

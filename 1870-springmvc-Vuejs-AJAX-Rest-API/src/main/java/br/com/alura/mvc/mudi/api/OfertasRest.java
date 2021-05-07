@@ -1,0 +1,59 @@
+package br.com.alura.mvc.mudi.api;
+
+import java.util.Optional;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.alura.mvc.mudi.controller.request.NovaOfertaRequest;
+import br.com.alura.mvc.mudi.model.Oferta;
+import br.com.alura.mvc.mudi.model.Pedido;
+import br.com.alura.mvc.mudi.repository.PedidoRepository;
+
+@RestController
+@RequestMapping("/api/ofertas")
+public class OfertasRest {
+
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	
+	@PostMapping
+	public ResponseEntity<Oferta> criaOferta(@Valid @RequestBody NovaOfertaRequest requisicao) {
+		Optional<Pedido> pedidoBuscado = pedidoRepository.findById(requisicao.getPedidoId());
+		if(!pedidoBuscado.isPresent()) {
+			return null;
+		}
+		
+		Pedido pedido = pedidoBuscado.get();
+		
+		Oferta nova = requisicao.toOferta();
+		nova.setPedido(pedido);
+		pedido.getOfertas().add(nova);
+		pedidoRepository.save(pedido);
+		
+		return ResponseEntity.ok().body(nova);
+	}
+	
+
+	
+	/*
+	 *  configurar a resposta HTTP mais detalhado, usando a classe ResponseEntity. 
+	 *  A classe ResponseEntity é um builder para definir o corpo (body) da resposta, status e os cabeçalhos.
+	 * 
+		@RestController
+		public class HomeRestController {
+		
+		    @GetMapping("/oi")
+		    ResponseEntity<String> hello() {
+		        return ResponseEntity.ok().body("Oi Mundo!"); // resposta HTTP 200 
+		    }
+		}    
+	
+	 */
+}
